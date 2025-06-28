@@ -23,6 +23,18 @@
       margin-top: 20px;
       max-width: 100%;
     }
+    a.download {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    a.download:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -34,10 +46,17 @@
   <script>
     function showThumbnail() {
       const videoId = document.getElementById("videoId").value.trim();
-      const imgUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+      if (!videoId) return;
 
+      const imgUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       const result = document.getElementById("result");
-      result.innerHTML = `<img src="${imgUrl}" alt="썸네일"><p>${imgUrl}</p>`;
+
+      result.innerHTML = `
+        <img src="${imgUrl}" alt="썸네일">
+        <br>
+        <a href="${imgUrl}" download="youtube_thumbnail.jpg" class="download">이미지 다운로드</a>
+        <p>주소: ${imgUrl}</p>
+      `;
     }
   </script>
 </body>
