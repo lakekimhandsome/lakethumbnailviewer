@@ -35,28 +35,49 @@
     a.download:hover {
       background: #0056b3;
     }
+    .bylake {
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <h1>YouTube 썸네일 뷰어</h1>
+  <div class="bylake">by Lake</div>
   <input type="text" id="videoId" placeholder="YouTube 영상 코드 입력 (예: dQw4w9WgXcQ)">
   <button onclick="showThumbnail()">보기</button>
   <div id="result"></div>
 
   <script>
-    function showThumbnail() {
+    async function showThumbnail() {
       const videoId = document.getElementById("videoId").value.trim();
       if (!videoId) return;
 
       const imgUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       const result = document.getElementById("result");
 
+      // 썸네일 표시
       result.innerHTML = `
         <img src="${imgUrl}" alt="썸네일">
         <br>
-        <a href="${imgUrl}" download="youtube_thumbnail.jpg" class="download">이미지 다운로드</a>
-        <p>주소: ${imgUrl}</p>
+        <p>${imgUrl}</p>
       `;
+
+      try {
+        const response = await fetch(imgUrl, { mode: 'cors' });
+        if (!response.ok) throw new Error('다운로드 실패');
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = `${videoId}.jpg`;
+        a.className = 'download';
+        a.textContent = '이미지 다운로드';
+
+        result.appendChild(a);
+      } catch (e) {
+        result.innerHTML += `<p style="color:red">이미지를 다운로드할 수 없습니다.</p>`;
+      }
     }
   </script>
 </body>
